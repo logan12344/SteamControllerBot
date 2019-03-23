@@ -425,7 +425,7 @@ async function newMode(msg, modeN){
 }
 
 // Hour Boost (Callbacks)
-async function hoursBoost(msg) {
+function hoursBoost(msg) {
 	var keyboard = {
         "inline_keyboard":[
 			[{
@@ -450,7 +450,7 @@ async function hoursBoost(msg) {
 			}]
         ]
     };
-	await bot.sendMessage(msg.chat.id,'\u{1F52E} Select game for boost:', {'reply_markup': JSON.stringify(keyboard)});
+	bot.sendMessage(msg.chat.id,'\u{1F52E} Select game for boost:', {'reply_markup': JSON.stringify(keyboard)});
 }
 
 // Steam Connections
@@ -609,7 +609,7 @@ function deleteRequestFriends(msg){
 }*/
 
 // Spam Friends
-async function spamFriends(msg){
+function spamFriends(msg){
 	var allFriends = client.myFriends;
 	var countReallFriends = 0;
 	var secondsWait = 0;
@@ -619,7 +619,7 @@ async function spamFriends(msg){
 		}
 	}
 	secondsWait = countReallFriends * 5;
-	await bot.sendMessage(settings.chatID, '\u{26A0} Loading, please wait '+ secondsWait + ' seconds');
+	bot.sendMessage(settings.chatID, '\u{26A0} Loading, please wait '+ secondsWait + ' seconds');
 	for (var key in client.myFriends) {
 		if(allFriends[key] == 3){
 			spamFriendsSleep(key, msg);
