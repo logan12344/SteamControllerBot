@@ -202,6 +202,27 @@ bot.on('callback_query', async function(msg)  {
 	}
 });
 
+bot.on('callback_query', function(msg)  {
+	switch (msg.data) {
+		case 'maFile':
+			console.log('Enter maFile');
+			bot.sendMessage(msg.message.chat.id, 'Enter maFile');
+			bot.once('document', maFileRead);
+			break;
+		case 'haven`t maFile':
+			console.log('Recording for account without maFile');
+			bot.sendMessage(msg.message.chat.id, 'Recording for account without maFile');
+			addBot(msg.message, addBotOptions.username, addBotOptions.password, addBotOptions.sharedSecret);
+			break;
+		case 'have SteamGuard':
+			console.log('Recording for account without SteamGuard');
+			addBotOptions.sharedSecret = 1;
+			bot.sendMessage(msg.message.chat.id, 'Recording for account without SteamGuard');
+			addBot(msg.message, addBotOptions.username, addBotOptions.password, addBotOptions.sharedSecret);
+			break;
+	}
+});
+
 // Functions for Accounts (Callbacks)
 async function addDeleteSpam(msg) {
 	var keyboard = {
@@ -255,25 +276,32 @@ function onMessageAddBot(msg){
 		console.log('Enter Password:');
 	}else if(addBotOptions.password == ''){
 		addBotOptions.password = msg.text;
-		bot.sendMessage(msg.chat.id, 'Enter maFile: \nIf you don`t have maFile and SteamGuard - write 0:' +
-		'\nIf you don`t have  maFile, but have SteamGuard - write 1:');
-		console.log('Enter maFile: \nIf you don`t have maFile and SteamGuard - write 0: \nIf you don`t have  maFile, but have SteamGuard - write 1:');
 		selectCountAcc();
-	}else if(msg.text != '0' && msg.text != '1'){
-		bot.off('message');
-		bot.once('document', maFileRead);
-	}else if(msg.text == '0'){
-		bot.off('message');
-		console.log('Recording for account without maFile');
-		bot.sendMessage(msg.chat.id, 'Recording for account without maFile');
-		addBot(msg, addBotOptions.username, addBotOptions.password, addBotOptions.sharedSecret);
-	}else if(msg.text == '1'){
-		bot.off('message');
-		console.log('Recording for account without SteamGuard');
-		addBotOptions.sharedSecret = msg.text;
-		bot.sendMessage(msg.chat.id, 'Recording for account without SteamGuard');
-		addBot(msg, addBotOptions.username, addBotOptions.password, addBotOptions.sharedSecret);	
 	}
+	if((addBotOptions.username != '') && (addBotOptions.password != '')){
+		bot.off('message');
+		sharedSecretRead(msg);
+	}
+}
+
+function sharedSecretRead(msg) {
+	var keyboard = {
+        "inline_keyboard":[
+			[{
+				text: 'I have maFile',
+				callback_data: 'maFile'
+			}],
+			[{
+				text: 'I haven`t maFile and SteamGuard',
+				callback_data: 'haven`t maFile'
+			}],
+			[{
+				text: 'I haven`t  maFile, but have SteamGuard',
+				callback_data: 'have SteamGuard'
+			}]
+        ]
+    };
+	bot.sendMessage(msg.chat.id,'\u{1F6A8} Select option:', {'reply_markup': JSON.stringify(keyboard)});
 }
 
 // Read maFile
@@ -493,7 +521,7 @@ function addFriends(msg){
 				}else
 					break;
 			}
-			await bot.sendMessage(msg.chat.id, 'Added friends: ' + p);
+			bot.sendMessage(msg.chat.id, 'Added friends: ' + p);
 		});
 	});
 }
