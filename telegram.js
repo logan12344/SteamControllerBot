@@ -88,9 +88,32 @@ bot.onText(/\/start/, async function(msg) { // Start
 	await bot.sendMessage(msg.chat.id, '\u{1F6A7} Use /bot to add new Steam account, if Steam account was added use /go, instructions /help');
 });
 
-bot.onText(/\/help/, async function(msg) { // Help
-	await bot.sendMessage(msg.chat.id, 'Please wait, loading...');
-	await bot.sendPhoto(msg.chat.id, 'https://drive.google.com/open?id=1mLKoemjlLsCxFdC4C-NJgPaDeM2f1JAa', {caption: 'List of comands'});
+bot.onText(/\/help/, function(msg) { // Help
+	var keyboard = {
+        "inline_keyboard":[
+			[{
+				text: 'Добавление в друзья \u{2753}',
+				callback_data: 'addToFriends'
+			}],
+			[{
+				text: 'Удалить заявки в друзья \u{2753}',
+				callback_data: 'deleteRequest'
+			}],
+			[{
+				text: 'Спам \u{2753}',
+				callback_data: 'spamFriends'
+			}],
+			[{
+				text: 'Hour boost игр \u{2753}',
+				callback_data: 'hourBoostGame'
+			}],
+			[{
+				text: 'Изменить имя, статус и UI mode',
+				callback_data: 'changeAll'
+			}]
+        ]
+    };
+	bot.sendMessage(msg.chat.id,'\u{1F6A8} Select help\u{2757}', {'reply_markup': JSON.stringify(keyboard)});
 });
 
 bot.onText(/\/go/, async function(msg) { // Go
@@ -219,6 +242,28 @@ bot.on('callback_query', function(msg)  {
 			addBotOptions.sharedSecret = 1;
 			bot.sendMessage(msg.message.chat.id, 'Recording for account without SteamGuard');
 			addBot(msg.message, addBotOptions.username, addBotOptions.password, addBotOptions.sharedSecret);
+			break;
+		case 'addToFriends':
+			console.log('Help addToFriends');
+			bot.sendPhoto(msg.message.chat.id, 'https://drive.google.com/open?id=1NUHPmRgpuSk43mktfO-R4jaagI28LVL9', {caption: 'Use /go, choose account and "\u{1F4B0} Добавить друзей" and drop file'});
+			bot.sendPhoto(msg.message.chat.id, 'https://drive.google.com/open?id=1IrPgUbN26FEs4AQsFTxEcWiulRvCM3S5', {caption: 'Example of file'});
+			break;
+		case 'deleteRequest':
+			console.log('Help deleteRequest');
+			bot.sendPhoto(msg.message.chat.id, 'https://drive.google.com/open?id=1NUHPmRgpuSk43mktfO-R4jaagI28LVL9', {caption: 'Use /go, choose account and "\u{26A0} Удалить отправленные заявки в друзья"'});
+			break;
+		case 'spamFriends':
+			console.log('Help spamFriends');
+			bot.sendPhoto(msg.message.chat.id, 'https://drive.google.com/open?id=1NUHPmRgpuSk43mktfO-R4jaagI28LVL9', {caption: 'Use /go, choose account and "\u{1F4E8} Spam друзьям"'});
+			break;
+		case 'hourBoostGame':
+			console.log('Help hourBoostGame');
+			bot.sendPhoto(msg.message.chat.id, 'https://drive.google.com/open?id=1NUHPmRgpuSk43mktfO-R4jaagI28LVL9', {caption: 'Use /go, choose account and "\u{1F55C} Hour boost игр"'});
+			bot.sendPhoto(msg.message.chat.id, 'https://drive.google.com/open?id=1qAk3imq1YRuAuWhYCazw5Do7PhObXyuB', {caption: 'Then choose game!'});
+			break;
+		case 'changeAll':
+			console.log('Help changeAll');
+			bot.sendPhoto(msg.message.chat.id, 'https://drive.google.com/open?id=1NUHPmRgpuSk43mktfO-R4jaagI28LVL9', {caption: 'Use /go, choose account and "\u{1F511} Изменить имя аккаунта" or "\u{1F4CC} Изменить статус аккаунта" or "\u{1F6A6} Изменить UI mode (PC, BigPicture, Mobile, WEB)"'});
 			break;
 	}
 });
