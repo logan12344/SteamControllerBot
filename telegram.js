@@ -572,40 +572,40 @@ function addFriends(msg){
 }
 
 function addFriendsSleep(msg, line, add){
-	if(client == undefined)
-		return;
-	add++;
-	sleep(500);
-	var fields = line.split('/');
-	if(fields[3] == 'id'){
-		getSteamID64(line + '/?xml=1').then(function (result) {
-			client.addFriend(result, function(err){
+	if(client != undefined && (line != undefined && line != null)){
+		add++;
+		sleep(500);
+		var fields = line.split('/');
+		if(fields[3] == 'id'){
+			getSteamID64(line + '/?xml=1').then(function (result) {
+				client.addFriend(result, function(err){
+					if(err){
+						exceptionAddFriends(msg, add, err);
+					}else{
+						console.log(add + ' Friend added with id ', result);
+						bot.sendMessage(msg.chat.id, add + ' Friend added with id ' + result);
+					}
+				});
+			});
+		}else if(fields[3] == 'profiles'){
+			client.addFriend(fields[4], function(err){
+				if(err){
+					exceptionAddFriends(msg, add, err)
+				}else{
+					console.log(add + ' Friend added with id ', fields[4]);
+					bot.sendMessage(msg.chat.id, add + ' Friend added with id ' + fields[4]);
+				}
+			});
+		}else{
+			client.addFriend(line, function(err){
 				if(err){
 					exceptionAddFriends(msg, add, err);
 				}else{
-					console.log(add + ' Friend added with id ', result);
-					bot.sendMessage(msg.chat.id, add + ' Friend added with id ' + result);
+					console.log(add + ' Friend added with id ', line);
+					bot.sendMessage(msg.chat.id, add + ' Friend added with id ' + line);
 				}
 			});
-		});
-	}else if(fields[3] == 'profiles'){
-		client.addFriend(fields[4], function(err){
-			if(err){
-				exceptionAddFriends(msg, add, err)
-			}else{
-				console.log(add + ' Friend added with id ', fields[4]);
-				bot.sendMessage(msg.chat.id, add + ' Friend added with id ' + fields[4]);
-			}
-		});
-	}else{
-		client.addFriend(line, function(err){
-			if(err){
-				exceptionAddFriends(msg, add, err);
-			}else{
-				console.log(add + ' Friend added with id ', line);
-				bot.sendMessage(msg.chat.id, add + ' Friend added with id ' + line);
-			}
-		});
+		}
 	}
 }
 
